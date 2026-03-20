@@ -2685,18 +2685,22 @@ function renderNoticeTab(d) {
       deptMap[dept].push(name);
     });
 
+    const isMobile = window.innerWidth <= 768;
+    const colCount  = isMobile ? 3 : allDepts.length;
+
     const grid = document.getElementById(gridId);
     if (!grid) return;
-    grid.style.gridTemplateColumns = `repeat(${allDepts.length},minmax(0,1fr))`;
+    grid.style.gridTemplateColumns = `repeat(${colCount},minmax(0,1fr))`;
     grid.innerHTML = allDepts.map((dept, i) => {
       const people  = deptMap[dept] || [];
-      const isLast  = i === allDepts.length - 1;
-      return `<div style="border-right:${isLast?'none':'0.5px solid var(--border)'};padding:12px 14px">
-        <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px;padding-bottom:8px;border-bottom:0.5px solid var(--border)">${dept} <span style="font-size:11px;font-weight:400;color:var(--text3)">${people.length > 0 ? people.length+'명' : ''}</span></div>
+      const col     = i % colCount;
+      const isLast  = col === colCount - 1;
+      return `<div style="border-right:${isLast?'none':'0.5px solid var(--border)'};padding:${isMobile?'10px 8px':'12px 14px'}">
+        <div style="font-size:${isMobile?'11px':'13px'};font-weight:600;color:var(--text2);margin-bottom:8px;padding-bottom:6px;border-bottom:0.5px solid var(--border);word-break:keep-all">${dept} <span style="font-size:10px;font-weight:400;color:var(--text3)">${people.length > 0 ? people.length+'명' : ''}</span></div>
         ${people.length === 0
-          ? '<div style="font-size:13px;color:var(--text3);text-align:center;margin-top:4px">-</div>'
-          : `<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">${
-              people.map(n => `<div style="font-size:12px;font-weight:600;color:#0C447C;background:#E6F1FB;border-radius:20px;padding:4px 8px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${n}</div>`).join('')
+          ? '<div style="font-size:12px;color:var(--text3);text-align:center;margin-top:4px">-</div>'
+          : `<div style="display:flex;flex-direction:column;gap:4px">${
+              people.map(n => `<div style="font-size:${isMobile?'11px':'12px'};font-weight:600;color:#0C447C;background:#E6F1FB;border-radius:20px;padding:4px 6px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${n}</div>`).join('')
             }</div>`
         }
       </div>`;
@@ -4106,3 +4110,4 @@ function renderDetailModal() {
 
 </body>
 </html>
+
