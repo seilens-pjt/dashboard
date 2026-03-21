@@ -1843,8 +1843,8 @@ function renderManagementTab(d) {
       if (isWarnOut) {
         return `<tr style="background:#fefce8">
           ${gjCell}
-          <td class="left" style="font-size:13px;font-weight:600">
-            <br><span style="display:inline-block;font-size:10px;font-weight:500;background:#fef9c3;color:#854F0B;border-radius:3px;padding:1px 6px;margin-top:3px">⚠ 퇴사 ${outRate}%</span>
+          <td class="left" style="font-size:13px;font-weight:600;white-space:nowrap">
+            ${team}<br><span style="display:inline-block;font-size:10px;font-weight:500;background:#fef9c3;color:#854F0B;border-radius:3px;padding:1px 6px;margin-top:3px">⚠ 퇴사 ${outRate}%</span>
           </td>
           <td style="font-weight:600">${t.total}</td>
           <td style="color:var(--green2);font-weight:600">${t.active}</td>
@@ -2948,7 +2948,7 @@ function renderNoticeTab(d) {
     grid.innerHTML = allDepts.map((dept, i) => {
       const people  = deptMap[dept] || [];
       const isLast  = i === allDepts.length - 1;
-      return `<div style="border-right:${isLast?'none':'0.5px solid var(--border)'};padding:8px 10px;min-width:0">
+      return `<div style="border-right:${isLast?'none':'0.5px solid var(--border)'};padding:8px 10px;min-width:0;align-self:stretch">
         <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;padding-bottom:6px;border-bottom:0.5px solid var(--border);word-break:keep-all">${dept} <span style="font-size:11px;font-weight:400;color:var(--text3)">${people.length > 0 ? people.length+'명' : ''}</span></div>
         ${people.length === 0
           ? '<div style="font-size:13px;color:var(--text3);text-align:center;margin-top:4px">-</div>'
@@ -4360,3 +4360,4 @@ function renderDetailModal() {
 
 </body>
 </html>
+
