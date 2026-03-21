@@ -2623,7 +2623,7 @@ function renderSearch(keyword) {
   const matched = staff.filter(r =>
     String(r['성명']||'').includes(kw) ||
     String(r['소속팀']||'').includes(kw)
-  );
+  ).sort((a, b) => String(a['성명']||'').localeCompare(String(b['성명']||''), 'ko'));
 
   if (matched.length === 0) {
     resultEl.innerHTML = `<div style="text-align:center;padding:60px 0;color:var(--text3);font-size:15px">"${kw}" 검색 결과가 없습니다</div>`;
@@ -2651,11 +2651,17 @@ function renderSearch(keyword) {
             const phone = String(r['휴대폰']||'-');
             const work  = String(r['업무']||'');
             const bg = i % 2 === 0 ? 'white' : '#fafbfc';
+            const hasPhone = phone !== '-' && phone !== '';
             return `<tr style="background:${bg};border-bottom:0.5px solid var(--border)">
               <td style="padding:11px 16px;font-weight:600;color:var(--text)">${name}</td>
               <td style="padding:11px 16px;color:var(--text2)">${team}</td>
               <td style="padding:11px 16px;color:var(--text2)">${rank}</td>
-              <td style="padding:11px 16px;font-weight:600;color:#1a56db">${phone}</td>
+              <td style="padding:11px 16px">
+                ${hasPhone
+                  ? `<a href="tel:${phone}" style="font-weight:700;color:var(--blue2);text-decoration:none">${phone}</a>`
+                  : `<span style="color:var(--text3)">-</span>`
+                }
+              </td>
               <td style="padding:11px 16px;color:var(--text3)">${work}</td>
             </tr>`;
           }).join('')}
