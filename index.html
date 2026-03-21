@@ -2864,7 +2864,7 @@ function renderNoticeTab(d) {
     const subEl    = document.getElementById('notice-exec-sub');
     const footerEl = document.getElementById('notice-exec-footer');
     const dateEl   = document.getElementById('notice-exec-date');
-    if (msgEl)    msgEl.innerHTML    = String(exec['내용']||'').replace(/\n/g,'<br>');
+    if (msgEl)    msgEl.innerHTML    = formatText(String(exec['내용']||''));
     if (subEl)    subEl.innerHTML    = String(exec['상세내용']||'').replace(/\n/g,'<br>');
     if (footerEl) footerEl.style.display = 'none';
     if (dateEl)   dateEl.textContent = String(exec['작성일']||'').trim().slice(0,10);
