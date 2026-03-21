@@ -1323,8 +1323,8 @@ body {
               <table class="data-table">
                 <thead><tr>
                   <th class="left">공종</th>
-                  <th class="left">팀명</th>
-                  <th>총 인원</th>
+        <th class="left" style="white-space:nowrap">팀명</th>
+                  <th style="white-space:nowrap">총 인원</th>
                   <th>재직</th>
                   <th>퇴사</th>
                   <th>입사예정</th>
@@ -2019,7 +2019,7 @@ function renderManagementTab(d) {
 
 function openJobTypeDetail(team, jobType) {
   const matrix = window._jobMatrix || {};
-  const people = (matrix[team] && matrix[team][jobType]) || [];
+  const people = ((matrix[team] && matrix[team][jobType]) || []).sort((a, b) => String(a.name||'').localeCompare(String(b.name||''), 'ko'));
 
   document.getElementById('jobtype-modal-title').textContent = team + ' · ' + jobType;
   document.getElementById('jobtype-modal-subtitle').textContent = '재직자 총 ' + people.length + '명';
@@ -2603,6 +2603,7 @@ async function loadSheetData() {
 }
 
 // ══ 직원 검색 ══
+
 function renderSearch(keyword) {
   const resultEl = document.getElementById('search-result');
   if (!resultEl) return;
@@ -2805,7 +2806,7 @@ function renderTechSearch(keyword) {
   const matched = active.filter(r =>
     String(r.name  || '').includes(kw) ||
     String(r.team  || '').includes(kw)
-  );
+  ).sort((a, b) => String(a.name||'').localeCompare(String(b.name||''), 'ko'));
 
   if (matched.length === 0) {
     resultEl.innerHTML = `<div style="text-align:center;padding:60px 0;color:var(--text3);font-size:15px">"${kw}" 검색 결과가 없습니다</div>`;
@@ -2952,7 +2953,7 @@ function renderNoticeTab(d) {
         ${people.length === 0
           ? '<div style="font-size:13px;color:var(--text3);text-align:center;margin-top:4px">-</div>'
           : `<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">${
-              people.map(n => `<div style="font-size:12px;font-weight:600;color:#0C447C;background:#E6F1FB;border-radius:20px;padding:4px 8px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${n}</div>`).join('')
+              people.map(n => `<div style="font-size:12px;font-weight:600;color:#0C447C;background:#E6F1FB;border-radius:20px;padding:4px 8px;text-align:center">${n}</div>`).join('')
             }</div>`
         }
       </div>`;
@@ -4362,4 +4363,3 @@ function renderDetailModal() {
 
 </body>
 </html>
-
