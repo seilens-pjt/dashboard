@@ -583,6 +583,9 @@ body {
   <div class="nav-item active" onclick="switchTab('notice', this)">
     <span class="nav-icon">📢</span> 공지
   </div>
+  <div class="nav-item" onclick="switchTab('mail', this)">
+    <span class="nav-icon">📬</span> 메일 수신 현황
+  </div>
   <div class="nav-item" onclick="switchTab('construction', this)">
     <span class="nav-icon">🏗</span> 공사
   </div>
@@ -601,6 +604,9 @@ body {
   <div class="sidebar-section-label">검색</div>
   <div class="nav-item" onclick="switchTab('search', this)">
     <span class="nav-icon">🔍</span> 직원 검색
+  </div>
+  <div class="nav-item" onclick="switchTab('techsearch', this)">
+    <span class="nav-icon">👷</span> 기술인 검색
   </div>
   <div class="sidebar-footer">※ 조회 전용 대시보드</div>
 </nav>
@@ -1416,6 +1422,69 @@ body {
       </div>
     </div>
 
+    <!-- ══ 메일 수신 현황 ══ -->
+    <div class="section" id="sec-mail">
+      <!-- 상단 통계 4개 -->
+      <div class="stat-row" style="margin-bottom:20px">
+        <div class="stat-card c1">
+          <div class="stat-label">전체 메일</div>
+          <div class="stat-num" id="mail-stat-total">-<span>건</span></div>
+          <div class="stat-change">수신 건수</div>
+        </div>
+        <div class="stat-card c4">
+          <div class="stat-label">회신기한 임박</div>
+          <div class="stat-num" id="mail-stat-soon">-<span>건</span></div>
+          <div class="stat-change">3일 이내</div>
+        </div>
+        <div class="stat-card c3">
+          <div class="stat-label">회신기한 초과</div>
+          <div class="stat-num" id="mail-stat-over">-<span>건</span></div>
+          <div class="stat-change">미완료</div>
+        </div>
+        <div class="stat-card c2">
+          <div class="stat-label">완료</div>
+          <div class="stat-num" id="mail-stat-done">-<span>건</span></div>
+          <div class="stat-change">처리 완료</div>
+        </div>
+      </div>
+
+      <!-- 메일 목록 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="dot" style="background:var(--blue2)"></div>메일 수신 목록</div>
+          <div class="card-meta" id="mail-list-meta">-</div>
+        </div>
+        <div id="mail-list-body" style="padding:8px 0">
+          <div style="text-align:center;padding:40px;color:var(--text3)">⏳ 로딩중...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ 기술인 검색 ══ -->
+    <div class="section" id="sec-techsearch">
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-body" style="padding:16px 20px">
+          <div style="display:flex;gap:10px;align-items:center">
+            <input type="text" id="techsearch-input" placeholder="이름 또는 팀명으로 검색..."
+              style="flex:1;padding:12px 16px;border:1px solid var(--border);border-radius:8px;font-size:15px;font-family:'Noto Sans KR',sans-serif;outline:none"
+              oninput="renderTechSearch(this.value)"
+              onkeydown="if(event.key==='Enter') renderTechSearch(this.value)">
+            <button onclick="renderTechSearch(document.getElementById('techsearch-input').value)"
+              style="padding:12px 24px;background:var(--navy);color:white;border:none;border-radius:8px;font-size:14px;font-family:'Noto Sans KR',sans-serif;font-weight:600;cursor:pointer;white-space:nowrap">
+              검색
+            </button>
+            <button onclick="document.getElementById('techsearch-input').value='';renderTechSearch('')"
+              style="padding:12px 16px;background:#f1f5f9;color:var(--text2);border:none;border-radius:8px;font-size:14px;font-family:'Noto Sans KR',sans-serif;cursor:pointer">
+              초기화
+            </button>
+          </div>
+        </div>
+      </div>
+      <div id="techsearch-result">
+        <div style="text-align:center;padding:60px 0;color:var(--text3);font-size:15px">이름 또는 팀명을 입력하여 검색하세요</div>
+      </div>
+    </div>
+
   </div><!-- /content -->
 </div><!-- /main -->
 
@@ -1560,6 +1629,8 @@ const tabs = {
   design:       { icon: '📐', title: '설계' },
   management:   { icon: '📋', title: '관리' },
   search:       { icon: '🔍', title: '직원 검색' },
+  mail:         { icon: '📬', title: '메일 수신 현황' },
+  techsearch:   { icon: '👷', title: '기술인 검색' },
 };
 
 function switchSafetyTab(key, el) {
@@ -2515,6 +2586,12 @@ async function loadSheetData() {
     // 직원 데이터 저장
     window._STAFF_DATA = d.staff || [];
 
+    // 메일 데이터 렌더
+    renderMailTab(d.mail || []);
+
+    // 기술인 데이터 저장 (management에서)
+    window._MANAGEMENT_DATA = d.management || [];
+
     const now = new Date();
     document.getElementById('topbar-time').textContent =
       now.toLocaleTimeString('ko-KR', { hour:'2-digit', minute:'2-digit' }) + ' 업데이트';
@@ -2587,7 +2664,180 @@ function renderSearch(keyword) {
     </div>`;
 }
 
-// ══ 공지 탭 렌더링 ══
+// ══ 메일 수신 현황 렌더링 ══
+function renderMailTab(mailData) {
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  const parseDate = (val) => {
+    if (!val || val === '') return null;
+    const d = new Date(val); d.setHours(0,0,0,0);
+    return isNaN(d) ? null : d;
+  };
+
+  const diffDays = (d) => {
+    if (!d) return null;
+    return Math.ceil((d - today) / (1000 * 60 * 60 * 24));
+  };
+
+  // 시트 컬럼: A=발신자, B=기한(회신기한), C=제목, D=내용, E=완료여부
+  const mails = mailData.map(r => {
+    const dueDate = parseDate(r['기한'] || '');
+    const done    = String(r['완료여부'] || '').trim();
+    const isDone  = done === '완료' || done === 'O' || done === 'Y' || done === '처리';
+    const diff    = diffDays(dueDate);
+    return {
+      sender:  String(r['발신자'] || '').trim(),
+      due:     dueDate,
+      subject: String(r['제목']   || '').trim(),
+      detail:  String(r['내용']   || '').trim(),
+      isDone, diff
+    };
+  });
+
+  const total = mails.length;
+  const doneCnt = mails.filter(m => m.isDone).length;
+  const soonCnt = mails.filter(m => !m.isDone && m.diff !== null && m.diff >= 0 && m.diff <= 3).length;
+  const overCnt = mails.filter(m => !m.isDone && m.diff !== null && m.diff < 0).length;
+
+  const setEl = (id, val) => { const el = document.getElementById(id); if(el) el.innerHTML = val; };
+  setEl('mail-stat-total', total + '<span>건</span>');
+  setEl('mail-stat-soon',  soonCnt + '<span>건</span>');
+  setEl('mail-stat-over',  overCnt + '<span>건</span>');
+  setEl('mail-stat-done',  doneCnt + '<span>건</span>');
+
+  const metaEl = document.getElementById('mail-list-meta');
+  if (metaEl) metaEl.textContent = `총 ${total}건`;
+
+  const bodyEl = document.getElementById('mail-list-body');
+  if (!bodyEl) return;
+
+  if (mails.length === 0) {
+    bodyEl.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text3)">수신된 메일이 없습니다</div>';
+    return;
+  }
+
+  // 기한 임박·초과 먼저, 그 다음 미완료, 완료 순 정렬
+  const sorted = [...mails].sort((a, b) => {
+    if (a.isDone !== b.isDone) return a.isDone ? 1 : -1;
+    if (a.diff !== null && b.diff !== null) return a.diff - b.diff;
+    if (a.diff !== null) return -1;
+    if (b.diff !== null) return 1;
+    return 0;
+  });
+
+  bodyEl.innerHTML = sorted.map(m => {
+    let dueLabel = '', dueBg = '', dueColor = '';
+    if (m.isDone) {
+      dueLabel = '완료'; dueBg = '#f0fdf4'; dueColor = 'var(--green2)';
+    } else if (m.diff !== null) {
+      if (m.diff < 0) {
+        dueLabel = `회신기한 초과 (${Math.abs(m.diff)}일)`;
+        dueBg = '#fef2f2'; dueColor = 'var(--red)';
+      } else if (m.diff === 0) {
+        dueLabel = '오늘까지 회신';
+        dueBg = '#fff7ed'; dueColor = 'var(--orange)';
+      } else if (m.diff <= 3) {
+        const ds = m.due ? `${m.due.getMonth()+1}/${m.due.getDate()}` : '';
+        dueLabel = `회신 D-${m.diff} (${ds})`;
+        dueBg = '#fff7ed'; dueColor = 'var(--orange)';
+      } else {
+        const ds = m.due ? `${m.due.getMonth()+1}/${m.due.getDate()}` : '';
+        dueLabel = `회신 D-${m.diff} (${ds})`;
+        dueBg = '#eff6ff'; dueColor = 'var(--blue2)';
+      }
+    }
+
+    const badgeHtml = dueLabel
+      ? `<div style="flex-shrink:0;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700;background:${dueBg};color:${dueColor};white-space:nowrap;text-align:right">${dueLabel}</div>`
+      : '';
+
+    return `
+    <div style="padding:14px 20px;border-bottom:1px solid #f1f5f9;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;${m.isDone ? 'opacity:0.5' : ''}">
+      <div style="min-width:0;flex:1">
+        ${m.sender ? `<div style="font-size:12px;color:var(--text3);font-weight:600;margin-bottom:4px">${m.sender}</div>` : ''}
+        <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.4;margin-bottom:${m.detail ? '4px' : '0'}">${m.subject || '(제목 없음)'}</div>
+        ${m.detail ? `<div style="font-size:12px;color:var(--text2);line-height:1.5">${m.detail}</div>` : ''}
+      </div>
+      ${badgeHtml}
+    </div>`;
+  }).join('');
+}
+
+// ══ 기술인 검색 ══
+function renderTechSearch(keyword) {
+  const resultEl = document.getElementById('techsearch-result');
+  if (!resultEl) return;
+
+  const kw = (keyword || '').trim();
+
+  if (!kw) {
+    resultEl.innerHTML = `<div style="text-align:center;padding:60px 0;color:var(--text3);font-size:15px">이름 또는 팀명을 입력하여 검색하세요</div>`;
+    return;
+  }
+
+  const mgmt = window._MANAGEMENT_DATA || [];
+  if (mgmt.length === 0) {
+    resultEl.innerHTML = `<div style="text-align:center;padding:60px 0;color:var(--text3);font-size:15px">데이터 로딩 중입니다. 잠시 후 다시 검색해주세요.</div>`;
+    return;
+  }
+
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  const parseDate = (str) => {
+    if (!str || str === '') return null;
+    const d = new Date(str); d.setHours(0,0,0,0);
+    return isNaN(d) ? null : d;
+  };
+
+  // 재직자만 필터 (입사일 <= 오늘 && 퇴사일 없음)
+  const active = mgmt.filter(r => {
+    const inD  = parseDate(r.inDate);
+    const outD = parseDate(r.outDate);
+    return inD && inD <= today && !outD;
+  });
+
+  const matched = active.filter(r =>
+    String(r.name  || '').includes(kw) ||
+    String(r.team  || '').includes(kw)
+  );
+
+  if (matched.length === 0) {
+    resultEl.innerHTML = `<div style="text-align:center;padding:60px 0;color:var(--text3);font-size:15px">"${kw}" 검색 결과가 없습니다</div>`;
+    return;
+  }
+
+  resultEl.innerHTML = `
+    <div style="font-size:13px;color:var(--text3);margin-bottom:12px">"${kw}" 검색 결과 ${matched.length}명 (재직자)</div>
+    <div style="background:white;border:1px solid var(--border);border-radius:12px;overflow:hidden">
+      ${matched.map((r, i) => {
+        const name    = String(r.name    || '-');
+        const team    = String(r.team    || '-');
+        const jobtype = String(r.jobtype || '-');
+        const phone   = String(r.phone   || '-');
+        const initial = name !== '-' ? name.charAt(0) : '?';
+        const bg = i % 2 === 0 ? 'white' : '#fafbfc';
+        const hasPhone = phone !== '-' && phone !== '';
+        return `
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:0.5px solid var(--border);background:${bg};gap:14px">
+          <div style="display:flex;align-items:center;gap:12px;min-width:0;flex:1">
+            <div style="width:40px;height:40px;border-radius:50%;background:var(--navy);color:white;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">${initial}</div>
+            <div style="min-width:0">
+              <div style="font-size:15px;font-weight:700;color:var(--text)">${name}</div>
+              <div style="font-size:12px;color:var(--text3);margin-top:2px">${team} · <span style="color:var(--teal)">${jobtype}</span></div>
+            </div>
+          </div>
+          ${hasPhone
+            ? `<a href="tel:${phone}" style="flex-shrink:0;display:flex;align-items:center;gap:6px;background:#eff6ff;color:var(--blue2);padding:8px 16px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none">
+                📞 ${phone}
+              </a>`
+            : `<span style="flex-shrink:0;font-size:13px;color:var(--text3)">번호 없음</span>`
+          }
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+
 function renderNoticeTab(d) {
   const notices   = d.notices   || [];
   const absences  = d.absences  || [];
@@ -2685,22 +2935,18 @@ function renderNoticeTab(d) {
       deptMap[dept].push(name);
     });
 
-    const isMobile = window.innerWidth <= 768;
-    const colCount  = isMobile ? 3 : allDepts.length;
-
     const grid = document.getElementById(gridId);
     if (!grid) return;
-    grid.style.gridTemplateColumns = `repeat(${colCount},minmax(0,1fr))`;
+    grid.style.gridTemplateColumns = `repeat(${allDepts.length},minmax(0,1fr))`;
     grid.innerHTML = allDepts.map((dept, i) => {
       const people  = deptMap[dept] || [];
-      const col     = i % colCount;
-      const isLast  = col === colCount - 1;
-      return `<div style="border-right:${isLast?'none':'0.5px solid var(--border)'};padding:${isMobile?'10px 8px':'12px 14px'}">
-        <div style="font-size:${isMobile?'11px':'13px'};font-weight:600;color:var(--text2);margin-bottom:8px;padding-bottom:6px;border-bottom:0.5px solid var(--border);word-break:keep-all">${dept} <span style="font-size:10px;font-weight:400;color:var(--text3)">${people.length > 0 ? people.length+'명' : ''}</span></div>
+      const isLast  = i === allDepts.length - 1;
+      return `<div style="border-right:${isLast?'none':'0.5px solid var(--border)'};padding:12px 14px">
+        <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px;padding-bottom:8px;border-bottom:0.5px solid var(--border)">${dept} <span style="font-size:11px;font-weight:400;color:var(--text3)">${people.length > 0 ? people.length+'명' : ''}</span></div>
         ${people.length === 0
-          ? '<div style="font-size:12px;color:var(--text3);text-align:center;margin-top:4px">-</div>'
-          : `<div style="display:flex;flex-direction:column;gap:4px">${
-              people.map(n => `<div style="font-size:${isMobile?'11px':'12px'};font-weight:600;color:#0C447C;background:#E6F1FB;border-radius:20px;padding:4px 6px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${n}</div>`).join('')
+          ? '<div style="font-size:13px;color:var(--text3);text-align:center;margin-top:4px">-</div>'
+          : `<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">${
+              people.map(n => `<div style="font-size:12px;font-weight:600;color:#0C447C;background:#E6F1FB;border-radius:20px;padding:4px 8px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${n}</div>`).join('')
             }</div>`
         }
       </div>`;
