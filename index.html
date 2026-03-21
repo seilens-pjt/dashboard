@@ -2944,7 +2944,7 @@ function renderNoticeTab(d) {
 
     const grid = document.getElementById(gridId);
     if (!grid) return;
-    grid.style.gridTemplateColumns = `repeat(${allDepts.length},minmax(0,1fr))`;
+    grid.style.gridTemplateColumns = `repeat(3,minmax(0,1fr))`;
     grid.innerHTML = allDepts.map((dept, i) => {
       const people  = deptMap[dept] || [];
       const isLast  = i === allDepts.length - 1;
