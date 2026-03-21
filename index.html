@@ -4109,6 +4109,14 @@ function renderDesignSheet(prefix, data) {
   renderTable(prefix+'-team-tbody', prefix+'-team-meta', groupBy('team'));
 }
 
+function formatText(text) {
+  return String(text)
+    .replace(/\n/g, '<br>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/!!(.+?)!!/g, '<span style="color:var(--red);font-weight:700">$1</span>')
+    .replace(/==(.+?)==/g, '<span style="color:var(--blue2)">$1</span>');
+}
+
 // 페이지 로드 시 데이터 가져오기
 loadSheetData();
 // 5분마다 자동 갱신
