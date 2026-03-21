@@ -1830,7 +1830,7 @@ function renderManagementTab(d) {
       if (isDefunct) {
         return `<tr style="background:#f8fafc">
           ${gjCell}
-          <td class="left" style="font-size:13px;font-weight:600;color:#b0b8c8">
+          <td class="left" style="font-size:13px;font-weight:600;color:#b0b8c8;white-space:nowrap">
             ${team} <span style="display:inline-block;font-size:10px;font-weight:500;background:#e2e6ed;color:#8a94a6;border-radius:3px;padding:1px 5px;margin-left:4px;vertical-align:middle">운영종료</span>
           </td>
           <td style="color:#b0b8c8">${t.total}</td>
@@ -2952,8 +2952,8 @@ function renderNoticeTab(d) {
         <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px;padding-bottom:8px;border-bottom:0.5px solid var(--border)">${dept} <span style="font-size:11px;font-weight:400;color:var(--text3)">${people.length > 0 ? people.length+'명' : ''}</span></div>
         ${people.length === 0
           ? '<div style="font-size:13px;color:var(--text3);text-align:center;margin-top:4px">-</div>'
-          : `<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">${
-              people.map(n => `<div style="font-size:12px;font-weight:600;color:#0C447C;background:#E6F1FB;border-radius:20px;padding:4px 8px;text-align:center">${n}</div>`).join('')
+          : `<div style="display:flex;flex-wrap:wrap;gap:4px">${
+              people.map(n => `<div style="font-size:12px;font-weight:600;color:#0C447C;background:#E6F1FB;border-radius:20px;padding:4px 10px;white-space:nowrap">${n}</div>`).join('')
             }</div>`
         }
       </div>`;
