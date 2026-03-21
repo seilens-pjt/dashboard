@@ -2696,7 +2696,7 @@ function renderMailTab(mailData) {
       sender:  String(r['발신자'] || '').trim(),
       due:     dueDate,
       subject: String(r['제목']   || '').trim(),
-      detail:  String(r['내용']   || '').trim(),
+      detail:  String(r['내용']   || '').trim().replace(/\n/g, '<br>'),
       isDone, diff
     };
   });
