@@ -1831,7 +1831,7 @@ function renderManagementTab(d) {
         return `<tr style="background:#f8fafc">
           ${gjCell}
           <td class="left" style="font-size:13px;font-weight:600;color:#b0b8c8;white-space:nowrap">
-            ${team} <span style="display:inline-block;font-size:10px;font-weight:500;background:#e2e6ed;color:#8a94a6;border-radius:3px;padding:1px 5px;margin-left:4px;vertical-align:middle">운영종료</span>
+           ${team}<br><span style="display:inline-block;font-size:10px;font-weight:500;background:#e2e6ed;color:#8a94a6;border-radius:3px;padding:1px 5px;margin-top:3px">운영종료</span>
           </td>
           <td style="color:#b0b8c8">${t.total}</td>
           <td style="color:#b0b8c8">0</td>
@@ -1844,7 +1844,7 @@ function renderManagementTab(d) {
         return `<tr style="background:#fefce8">
           ${gjCell}
           <td class="left" style="font-size:13px;font-weight:600">
-            ${team} <span style="display:inline-flex;align-items:center;gap:2px;font-size:10px;font-weight:500;background:#fef9c3;color:#854F0B;border-radius:3px;padding:1px 6px;margin-left:4px;vertical-align:middle">⚠ 퇴사 ${outRate}%</span>
+            <br><span style="display:inline-block;font-size:10px;font-weight:500;background:#fef9c3;color:#854F0B;border-radius:3px;padding:1px 6px;margin-top:3px">⚠ 퇴사 ${outRate}%</span>
           </td>
           <td style="font-weight:600">${t.total}</td>
           <td style="color:var(--green2);font-weight:600">${t.active}</td>
@@ -2072,7 +2072,7 @@ setInterval(updateTime, 60000);
 
 // ══ 비밀번호 ══
 // 비밀번호 변경 시 아래 값만 수정하세요
-const DASHBOARD_PW = '1234';
+const DASHBOARD_PW = '1209';
 
 (function() {
   if (sessionStorage.getItem('pw_ok') === '1') {
@@ -2948,13 +2948,8 @@ function renderNoticeTab(d) {
     grid.innerHTML = allDepts.map((dept, i) => {
       const people  = deptMap[dept] || [];
       const isLast  = i === allDepts.length - 1;
-      return `<div style="border-right:${isLast?'none':'0.5px solid var(--border)'};padding:12px 14px">
-        <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px;padding-bottom:8px;border-bottom:0.5px solid var(--border)">${dept} <span style="font-size:11px;font-weight:400;color:var(--text3)">${people.length > 0 ? people.length+'명' : ''}</span></div>
-        ${people.length === 0
-          ? '<div style="font-size:13px;color:var(--text3);text-align:center;margin-top:4px">-</div>'
-          : `<div style="display:flex;flex-wrap:wrap;gap:4px">${
-              people.map(n => `<div style="font-size:12px;font-weight:600;color:#0C447C;background:#E6F1FB;border-radius:20px;padding:4px 10px;white-space:nowrap">${n}</div>`).join('')
-            }</div>`
+      return `<div style="border-right:${isLast?'none':'0.5px solid var(--border)'};padding:8px 10px;min-width:0">
+        <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;padding-bottom:6px;border-bottom:0.5px solid var(--border);word-break:keep-all">${dept} <span style="font-size:11px;font-weight:400;color:var(--text3)">${people.length > 0 ? people.length+'명' : ''}</span></div>
         }
       </div>`;
     }).join('');
