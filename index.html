@@ -2896,7 +2896,7 @@ function renderNoticeTab(d) {
         const badge = tag ? `<span style="display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;margin-right:6px;${style}">${tag}</span>` : '';
         return `<div style="display:flex;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--border);align-items:flex-start">
           <span style="font-size:12px;font-weight:600;color:var(--text3);background:#f1f5f9;border-radius:20px;padding:2px 8px;flex-shrink:0">${i+1}</span>
-          <div style="font-size:14px;color:var(--text);line-height:1.6;flex:1;white-space:pre-line">${badge}${formatText(r['내용']||'')}</div>
+          <div style="font-size:14px;color:var(--text);line-height:1.6;flex:1">${badge ? `<div style="margin-bottom:4px">${badge}</div>` : ''}${formatText(r['내용']||'')}</div>
         </div>`;
       }).join('').replace(/border-bottom[^;]+;([^"]*)"([^>]*)>([^<]*)<\/div>\s*$/, '$2>$3</div>');
     }
