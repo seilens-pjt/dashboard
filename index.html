@@ -2944,15 +2944,16 @@ function renderNoticeTab(d) {
 
     const grid = document.getElementById(gridId);
     if (!grid) return;
-    grid.style.gridTemplateColumns = `repeat(3,minmax(0,1fr))`;
+const isMobile = window.innerWidth <= 768;
+    grid.style.gridTemplateColumns = `repeat(${isMobile ? 3 : allDepts.length},minmax(0,1fr))`;
     grid.innerHTML = allDepts.map((dept, i) => {
       const people  = deptMap[dept] || [];
       const isLast  = i === allDepts.length - 1;
       return `<div style="border-right:${isLast?'none':'0.5px solid var(--border)'};padding:8px 6px;min-width:0;align-self:stretch;text-align:center">
         <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;padding-bottom:6px;border-bottom:0.5px solid var(--border);word-break:keep-all;text-align:center">${dept} <span style="font-size:11px;font-weight:400;color:var(--text3)">${people.length > 0 ? people.length+'명' : ''}</span></div>
         ${people.length === 0
-          ? '<div style="font-size:13px;color:var(--text3);text-align:center;margin-top:4px">-</div>'
-          : `<div style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center">${people.map(n => `<div style="font-size:12px;font-weight:600;color:#0C447C;background:#E6F1FB;border-radius:20px;padding:4px 8px;white-space:nowrap">${n}</div>`).join('')}</div>`}
+          ? '<div style="font-size:12px;color:var(--text3);text-align:center;margin-top:4px">-</div>'
+          : `<div style="display:flex;flex-direction:column;gap:4px">${people.map(n => `<div style="font-size:12px;font-weight:600;color:#0C447C;background:#E6F1FB;border-radius:20px;padding:4px 6px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${n}</div>`).join('')}</div>`}
       </div>`;
     }).join('');
   };
@@ -4360,4 +4361,3 @@ function renderDetailModal() {
 
 </body>
 </html>
-
