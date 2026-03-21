@@ -2690,7 +2690,7 @@ function renderMailTab(mailData) {
   const mails = mailData.map(r => {
     const dueDate = parseDate(r['기한'] || '');
     const done    = String(r['완료여부'] || '').trim();
-    const isDone  = done === '완료' || done === 'O' || done === 'Y' || done === '처리';
+    const isDone  = done === '완료' || done === 'O' || done === 'Y' || done === '처리' || done === 'TRUE' || done === true;
     const diff    = diffDays(dueDate);
     return {
       sender:  String(r['발신자'] || '').trim(),
