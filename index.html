@@ -1676,6 +1676,11 @@ function switchTab(key, el) {
 
 // 페이지 로드 시 URL 해시로 탭 복원
 (function restoreTab() {
+  // PWA 모드(standalone)로 실행 시 항상 공지 탭으로 시작
+  const isPWA = window.matchMedia('(display-mode: standalone)').matches
+             || window.navigator.standalone;
+  if (isPWA) return;
+
   const hash = location.hash.replace('#', '');
   if (hash && tabs[hash]) {
     const navEl = document.querySelector(`.nav-item[onclick*="'${hash}'"]`);
