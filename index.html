@@ -2244,7 +2244,7 @@ function renderConstructionTab(d) {
   if (tmrEl)   tmrEl.textContent   = `${fmtDate(tomorrow)} (${DAYS[tomorrow.getDay()]})`;
   const IN_COLOR   = '#dc2626';
   const LIFT_COLOR = '#1a56db';
-  const TYPE_LABEL = { '메인모듈': '메인', '레터럴모듈': '레터럴', '폐수 트러스': '폐수' };
+  const TYPE_LABEL = { '메인모듈': '메인', '레터럴모듈': '레터럴', '폐수트러스': '폐수' };
   const makeTags = (items, tagColor) => {
     if (!items || items.length === 0) return '<span style="font-size:13px;color:var(--text3)">없음</span>';
     const bgColor   = tagColor + '12';
@@ -2262,7 +2262,7 @@ function renderConstructionTab(d) {
   setInner('con-today-lift',   makeTags(schedule.today_lift,   LIFT_COLOR));
   setInner('con-tomorrow-in',  makeTags(schedule.tomorrow_in,  IN_COLOR));
   setInner('con-tomorrow-lift',makeTags(schedule.tomorrow_lift,LIFT_COLOR));
-  const MODULE_LIST = [{ key:'메인모듈' }, { key:'레터럴모듈' }, { key:'폐수 트러스' }];
+  const MODULE_LIST = [{ key:'메인모듈' }, { key:'레터럴모듈' }, { key:'폐수트러스' }];
   const modGrid = document.getElementById('con-module-grid');
   if (modGrid) {
     modGrid.innerHTML = MODULE_LIST.map(m => {
