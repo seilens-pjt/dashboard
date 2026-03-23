@@ -1776,7 +1776,7 @@ function renderManagementTab(d) {
   });
 
   // ── 공종 정렬 ──
-  const GONGJONG_ORDER = ['모듈','PCW','일반배관','일반배관/폐수','폐수','덕트','보온','양중'];
+  const GONGJONG_ORDER = ['RACK','PCW','일반배관','일반배관/폐수','폐수','보온','양중','PVC덕트','덕트'];
   const getOrder = (gj) => {
     const idx = GONGJONG_ORDER.findIndex(g => (gj||'').includes(g));
     return idx === -1 ? 99 : idx;
