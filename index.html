@@ -1705,7 +1705,7 @@ function switchMgmtTab(key, el) {
 
 // ══ 관리 탭 렌더링 ══
 function renderManagementTab(d) {
-  const rows = d.management || [];
+  const rows = (d.management || []).filter(r => (r.gongjong || '').trim() !== '관리직');
   if (rows.length === 0) return;
 
   const today = new Date(); today.setHours(0,0,0,0);
