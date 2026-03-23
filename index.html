@@ -690,8 +690,14 @@ body {
 
     </div>
 
-    <!-- ══ 공사 ══ -->
+<!-- ══ 공사 ══ -->
     <div class="section" id="sec-construction">
+
+      <div style="display:flex;gap:6px;margin-bottom:16px;border-bottom:2px solid var(--border);padding-bottom:0">
+        <button class="safety-subtab active" onclick="switchConTab('status',this)">🏗 공사현황</button>
+        <button class="safety-subtab" onclick="switchConTab('attendance',this)">👷 출역인원</button>
+      </div>
+      <div id="con-sub-status">
 
       <!-- ① 금일 / 명일 일정 -->
       <div class="grid-2" style="margin-bottom:20px">
