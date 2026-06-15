@@ -2539,7 +2539,7 @@ function openAttPopupByKey(safeKey, jobtype) {
 function closeAttPopup(){_ov('att-popup-overlay',false);}
 
 function renderAttendanceTab(attendance, management, staff) {
-  const GONGJONG_ORDER = ['RACK','PCW','일반배관','일반배관/폐수','폐수','보온','양중','PVC덕트','덕트','관리직'];
+  const GONGJONG_ORDER = ['RACK','SUS','일반배관','폐수','보온','양중','PVC덕트','덕트','관리직'];
   const getGjOrder = gj => { const i = GONGJONG_ORDER.findIndex(g => (gj||'') === g || (gj||'').includes(g)); return i === -1 ? 99 : i; };
   const now = new Date();
   const metaEl = document.getElementById('att-meta');
@@ -2850,7 +2850,7 @@ function renderManagementTab(d) {
   const frEl = document.getElementById('mgmt-field-out-rate');   if (frEl)  frEl.textContent = fRate;
   const farEl = document.getElementById('mgmt-factory-out-rate'); if (farEl) farEl.textContent = faRate;
 
-  const GONGJONG_ORDER = ['RACK','PCW','일반배관','일반배관/폐수','폐수','보온','양중','PVC덕트','덕트','관리직'];
+  const GONGJONG_ORDER = ['RACK','SUS','일반배관','폐수','보온','양중','PVC덕트','덕트','관리직'];
   const getGjOrder = gj => { const i = GONGJONG_ORDER.findIndex(g => (gj||'').includes(g)); return i === -1 ? 99 : i; };
 
   // 팀별 집계
@@ -3095,7 +3095,7 @@ function renderDrillingContent() {
 
 // ── 신규계획 탭 렌더링 ──
 function renderNewPlanTab(mgmt) {
-  const GONGJONG_ORDER = ['RACK','PCW','일반배관','일반배관/폐수','폐수','보온','양중','PVC덕트','덕트','관리직'];
+  const GONGJONG_ORDER = ['RACK','SUS','일반배관','폐수','보온','양중','PVC덕트','덕트','관리직'];
   const getGjOrder = gj => { const i = GONGJONG_ORDER.findIndex(g => (gj||'') === g || (gj||'').includes(g)); return i === -1 ? 99 : i; };
   const today = new Date(); today.setHours(0,0,0,0);
   const DAYS  = ['일','월','화','수','목','금','토'];
