@@ -2887,12 +2887,13 @@ function renderManagementTab(d) {
     const isPending   = t.active === 0 && t.future > 0;
     let rowClass = '';
     let badge = '';
-    if (isEnded) {
+   if (isEnded) {
       rowClass = 'highlight-gray';
       badge = ` <span style="font-size:10px;background:#e5e7eb;color:#374151;border:1px solid #d1d5db;border-radius:10px;padding:1px 6px;font-weight:700">운영종료</span>`;
     } else if (isPending) {
       rowClass = 'highlight-crimson';
-      badge = ` <span style="font-size:10px;background:#ffe4e6;color:#9f1239;border:1px solid #fda4af;border-radius:10px;padding:1px 6px;font-weight:700">투입예정</span>`;}
+      badge = ` <span style="font-size:10px;background:#ffe4e6;color:#9f1239;border:1px solid #fda4af;border-radius:10px;padding:1px 6px;font-weight:700">투입예정</span>`;
+    }
     const gjCell = t.gongjong !== prevGj
       ? `<td class="left" style="font-size:11px;color:var(--text2);font-weight:600;white-space:nowrap">${t.gongjong||'-'}</td>`
       : `<td class="left"></td>`;
