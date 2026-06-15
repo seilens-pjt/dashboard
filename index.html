@@ -2850,7 +2850,7 @@ function renderManagementTab(d) {
   const frEl = document.getElementById('mgmt-field-out-rate');   if (frEl)  frEl.textContent = fRate;
   const farEl = document.getElementById('mgmt-factory-out-rate'); if (farEl) farEl.textContent = faRate;
 
-  const GONGJONG_ORDER = ['RACK','SUS','일반배관','폐수','보온','양중','PVC덕트','덕트','관리직'];
+  const GONGJONG_ORDER = ['RACK','SUS','일반배관','폐수','보온','양중','PVC덕트','덕트','관리직','현장','공장'];
   const getGjOrder = gj => { const i = GONGJONG_ORDER.findIndex(g => (gj||'').includes(g)); return i === -1 ? 99 : i; };
 
   // 팀별 집계
