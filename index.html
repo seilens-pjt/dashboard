@@ -2245,7 +2245,12 @@ function renderTechSearch(keyword) {
   const today = new Date(); today.setHours(0,0,0,0);
   const parseDate = (str) => { if (!str || str === '') return null; const d = new Date(str); d.setHours(0,0,0,0); return isNaN(d) ? null : d; };
   const active = mgmt.filter(r => { const inD = parseDate(r.inDate); const outD = parseDate(r.outDate); return inD && inD <= today && !outD; });
-  const matched = active.filter(r => String(r.name||'').includes(kw) || String(r.team||'').includes(kw) || String(r.phone||'').includes(kw)).sort((a, b) => String(a.name||'').localeCompare(String(b.name||''), 'ko'));
+  const matched = active.filter(r => String(r.name||'').includes(kw) || String(r.team||'').includes(kw) || String(r.phone||'').includes(kw)).sort((a, b) => {
+  const aIsManager = String(a.jobtype||'').trim() === '공사관리자';
+  const bIsManager = String(b.jobtype||'').trim() === '공사관리자';
+  if (aIsManager !== bIsManager) return aIsManager ? -1 : 1; // 공사관리자 우선
+  return String(a.name||'').localeCompare(String(b.name||''), 'ko'); // 그 외엔 가나다순
+});
   if (matched.length === 0) { resultEl.innerHTML = `<div class="t-empty-lg">"${kw}" 검색 결과가 없습니다</div>`; return; }
   resultEl.innerHTML = `
     <div style="font-size:13px;color:var(--text3);margin-bottom:12px">"${kw}" 검색 결과 ${matched.length}명 (재직자)</div>
